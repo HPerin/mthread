@@ -7,9 +7,9 @@
 
 #include "mthread.h"
 #include "mqueue.h"
-#include "mdata.h"
 #include "mcontrol.h"
 #include "mtcb.h"
+#include "mmutex.h"
 
 int mcreate (int prio, void (*start)(void*), void *arg) {
 	TCB_t *thread;
@@ -70,13 +70,36 @@ int mwait(int tid) {
 }
 
 int mmutex_init(mmutex_t *mtx) {
+	mmutex_initialize(mtx);
+
 	return 0;
 }
 
 int mlock (mmutex_t *mtx) {
+	TCB_t *thread;
+
+	if (mtx->lock == MUTEX_LOCKED) {
+		thread = mcontrol_pop_running();
+		if (!thread) return -1;
+		mmutex_add(mtx, thread);
+
+		mcontrol_schedule();
+	} else {
+		mtx->lock = MUTEX_LOCKED;
+	}
+
 	return 0;
 }
 
 int munlock (mmutex_t *mtx) {
+	TCB_t *thread;
+
+	thread = mmutex_drop(mtx);
+	if (!thread) {
+		mtx->lock = MUTEX_UNLOCKED;
+	} else {
+		mcontrol_add_ready( thread );
+	}
+
 	return 0;
 }

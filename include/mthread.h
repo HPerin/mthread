@@ -6,8 +6,8 @@
  *
  * VERS�O 1 - 24/03/2015
  */
-#ifndef __mthread__
-#define __mthread__
+#ifndef INCLUDE_MTHREAD_H_
+#define INCLUDE_MTHREAD_H_
 
 #include "mdata.h"
 

@@ -8,7 +8,17 @@
 #ifndef INCLUDE_MTCB_H_
 #define INCLUDE_MTCB_H_
 
-#include "mdata.h"
+#include <ucontext.h>
+
+typedef struct TCB {
+	int tid;
+	int state;
+	int prio;
+	int waiting;
+	ucontext_t context;
+	struct TCB *prev;
+	struct TCB *next;
+} TCB_t;
 
 TCB_t *mtcb_create(void (*start)(void*), void *arg);
 void mtcb_destroy(TCB_t *thread);

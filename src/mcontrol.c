@@ -136,6 +136,10 @@ int mcontrol_is_running() {
 	return 1;
 }
 
+TCB_t *mcontrol_get_running() {
+	return running;
+}
+
 int mcontrol_mtcb_exist_tid(int tid) {
 	return ( mqueue_exist_tid( ready_high, tid ) ||
 			 mqueue_exist_tid( ready_medium, tid ) ||
