@@ -26,6 +26,7 @@ TCB_t *mcontrol_pop_highest_priority();
 TCB_t *mcontrol_pop_running();
 
 int mcontrol_is_running();
+TCB_t *mcontrol_get_running();
 
 int mcontrol_mtcb_exist_tid(int tid);
 

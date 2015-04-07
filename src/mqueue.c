@@ -7,7 +7,7 @@
 
 #include <stdlib.h>
 
-#include "../include/mqueue.h"
+#include "mqueue.h"
 
 TCBQUEUE *mqueue_create() {
 	TCBQUEUE *queue = malloc(sizeof(TCBQUEUE));

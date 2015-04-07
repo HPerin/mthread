@@ -8,7 +8,7 @@
 #ifndef INCLUDE_MQUEUE_H_
 #define INCLUDE_MQUEUE_H_
 
-#include "mdata.h"
+#include "mtcb.h"
 
 typedef struct tcbqueue_t {
 	TCB_t *root;
