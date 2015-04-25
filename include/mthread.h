@@ -1,13 +1,9 @@
-/*
- * mthread.h: arquivo de inclus�o com os prot�tipos das fun��es a serem
- *            implementadas na realiza��o do trabalho.
- *
- * N�O MODIFIQUE ESTE ARQUIVO.
- *
- * VERS�O 1 - 24/03/2015
- */
-#ifndef INCLUDE_MTHREAD_H_
-#define INCLUDE_MTHREAD_H_
+//
+// Created by lucas on 21/04/15.
+//
+
+#ifndef MTHREAD_MTHREAD_H
+#define MTHREAD_MTHREAD_H
 
 #include "mdata.h"
 
@@ -18,4 +14,4 @@ int mmutex_init(mmutex_t *mtx);
 int mlock (mmutex_t *mtx);
 int munlock (mmutex_t *mtx);
 
-#endif
+#endif //MTHREAD_MTHREAD_H

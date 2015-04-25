@@ -1,105 +1,114 @@
-/*
- * mthread.c
- *
- *  Created on: Mar 31, 2015
- *      Author: lucas
- */
+//
+// Created by lucas on 21/04/15.
+//
 
+#include <stdbool.h>
+#include <mcontrol.h>
+#include <stddef.h>
 #include "mthread.h"
-#include "mqueue.h"
-#include "mcontrol.h"
-#include "mtcb.h"
-#include "mmutex.h"
 
-int mcreate (int prio, void (*start)(void*), void *arg) {
-	TCB_t *thread;
+static bool initialized = false;
 
-	mcontrol_initialize_check_and_do();
+int mcreate(int priority, void (*start)(void *), void *arg) {
+    METCB *metcb;
 
-	thread = mtcb_create( start, arg );
-	if (!thread) return -1;
-	thread->prio = prio;
+    if (!initialized) {
+        initialized = true;
+        mcontrol_initialize();
 
-	mcontrol_add_ready( thread );
+        metcb = metcb_create(PRIORITY_HIGH, NULL, NULL);
+        if (!metcb) return -1;
+        mcontrol_add_running(metcb);
+    }
 
-	return thread->tid;
+    metcb = metcb_create(priority, start, arg);
+    if (!metcb) return -1;
+    mcontrol_add_ready(metcb);
+
+    return metcb->tcb.tid;
 }
 
-int myield(void) {
-	TCB_t *thread;
+int myield() {
+    METCB *metcb;
 
-	mcontrol_initialize_check_and_do();
+    if (!initialized) return -1;
 
-	thread = mcontrol_pop_running();
-	mcontrol_add_ready( thread );
-	mtcb_context_save( thread );
+    metcb = mcontrol_pop_running();
+    if (!metcb) return -1;
+    mcontrol_add_ready(metcb);
+    metcb_context_save(metcb);
 
-	if (!mcontrol_is_running()) {
-		mcontrol_schedule();
-	}
+    if (mcontrol_is_running() == false) {
+        mcontrol_schedule();
+    }
 
-	return 0;
+    return 0;
 }
 
 int mwait(int tid) {
-	TCB_t *thread;
+    METCB *metcb;
 
-	mcontrol_initialize_check_and_do();
+    if (!initialized) return -1;
+    if (mcontrol_exist_tid(tid) == false) return -1;
+    if (mcontrol_waiting_already_check(tid)) return -1;
 
-	if (mcontrol_waiting_already_check( tid )) {
-		return -1;
-	}
+    metcb = mcontrol_pop_running();
+    mcontrol_add_waiting(metcb);
+    metcb->waiting_tid = tid;
+    metcb_context_save(metcb);
 
-	if (!mcontrol_mtcb_exist_tid( tid )) {
-		return -1;
-	}
+    if (mcontrol_is_running() == false) {
+        mcontrol_schedule();
+    }
 
-	thread = mcontrol_pop_running();
-	if (!thread) return -1;
-	if (thread->tid == tid) return -1;
-	thread->waiting = tid;
-
-	mcontrol_add_blocked( thread );
-	mtcb_context_save( thread );
-
-	if (!mcontrol_is_running()) {
-		mcontrol_schedule();
-	}
-
-	return 0;
+    return 0;
 }
 
 int mmutex_init(mmutex_t *mtx) {
-	mmutex_initialize(mtx);
 
-	return 0;
+    if (!initialized) return -1;
+    if (!mtx) return -1;
+
+    mmutex_initialize(mtx);
+
+    return 0;
 }
 
-int mlock (mmutex_t *mtx) {
-	TCB_t *thread;
+int mlock(mmutex_t *mtx) {
+    METCB *metcb;
 
-	if (mtx->lock == MUTEX_LOCKED) {
-		thread = mcontrol_pop_running();
-		if (!thread) return -1;
-		mmutex_add(mtx, thread);
+    if (!initialized) return -1;
+    if (!mtx) return -1;
 
-		mcontrol_schedule();
-	} else {
-		mtx->lock = MUTEX_LOCKED;
-	}
+    if (mmutex_is_locked(mtx) == true) {
+        metcb = mcontrol_pop_running();
+        mmutex_add(mtx, metcb);
+        mcontrol_add_locked(metcb_create_copy(metcb));
+        metcb_context_save(metcb);
 
-	return 0;
+        if (mcontrol_is_running() == false) {
+            mcontrol_schedule();
+        }
+    } else {
+        mmutex_lock(mtx);
+    }
+
+    return 0;
 }
 
-int munlock (mmutex_t *mtx) {
-	TCB_t *thread;
+int munlock(mmutex_t *mtx) {
+    METCB *metcb;
 
-	thread = mmutex_drop(mtx);
-	if (!thread) {
-		mtx->lock = MUTEX_UNLOCKED;
-	} else {
-		mcontrol_add_ready( thread );
-	}
+    if (!initialized) return -1;
+    if (!mtx) return -1;
 
-	return 0;
+    if (mmutex_is_empty(mtx) == false) {
+        metcb = mmutex_pop(mtx);
+        mcontrol_locked_remove(metcb->tcb.tid);
+        mcontrol_add_ready(metcb);
+    } else {
+        mmutex_unlock(mtx);
+    }
+
+    return 0;
 }

@@ -1,22 +1,38 @@
-/*
- * mmutex.c
- *
- *  Created on: Apr 5, 2015
- *      Author: lucas
- */
+//
+// Created by lucas on 21/04/15.
+//
 
+#include <stddef.h>
+#include <mlist.h>
 #include "mmutex.h"
-#include "mdata.h"
 
 void mmutex_initialize(mmutex_t *mtx) {
-	mtx->lock = MUTEX_UNLOCKED;
-	mtx->queue = mqueue_create();
+    mtx->flag = FLAG_UNLOCKED;
+    mtx->mlist = mlist_create();
 }
 
-void mmutex_add(mmutex_t *mtx, TCB_t *thread) {
-	mqueue_add_last(mtx->queue, thread);
+void mmutex_lock(mmutex_t *mtx) {
+    mtx->flag = FLAG_LOCKED;
 }
 
-TCB_t *mmutex_drop(mmutex_t *mtx) {
-	return mqueue_pop_first(mtx->queue);
+void mmutex_unlock(mmutex_t *mtx) {
+    mtx->flag = FLAG_UNLOCKED;
+}
+
+bool mmutex_is_locked(mmutex_t *mtx) {
+    if (mtx->flag == FLAG_LOCKED) return true;
+
+    return false;
+}
+
+bool mmutex_is_empty(mmutex_t *mtx) {
+    return mlist_is_empty(mtx->mlist);
+}
+
+void mmutex_add(mmutex_t *mtx, METCB *metcb) {
+    mlist_push_end(mtx->mlist, metcb);
+}
+
+METCB *mmutex_pop(mmutex_t *mtx) {
+    return mlist_pop_first(mtx->mlist);
 }

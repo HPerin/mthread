@@ -1,49 +1,39 @@
-/*
- * mcontrol.h
- *
- *  Created on: Apr 2, 2015
- *      Author: lucas
- */
+//
+// Created by lucas on 21/04/15.
+//
 
-#ifndef INCLUDE_MCONTROL_H_
-#define INCLUDE_MCONTROL_H_
+#ifndef MTHREAD_MCONTROL_H
+#define MTHREAD_MCONTROL_H
 
-#include "mdata.h"
+#include <stdbool.h>
+#include "metcb.h"
 
 void mcontrol_initialize();
 
 void mcontrol_finalize_thread();
 
-void mcontrol_destroy_main();
-
 void mcontrol_schedule();
 
-void mcontrol_add_ready(TCB_t *thread);
-void mcontrol_add_blocked(TCB_t *thread);
-void mcontrol_add_running(TCB_t *thread);
+void mcontrol_add_ready(METCB *etcb);
 
-TCB_t *mcontrol_pop_highest_priority();
-TCB_t *mcontrol_pop_running();
+void mcontrol_add_waiting(METCB *etcb);
 
-int mcontrol_is_running();
-TCB_t *mcontrol_get_running();
+void mcontrol_add_locked(METCB *etcb);
 
-int mcontrol_mtcb_exist_tid(int tid);
+void mcontrol_add_running(METCB *etcb);
 
-void mcontrol_initialize_check_and_do();
+METCB *mcontrol_pop_highest_priority();
 
-/*
- * Check if the given tid is
- * already been waited for another
- * thread.
- */
-int mcontrol_waiting_already_check(int tid);
+METCB *mcontrol_pop_running();
 
-/*
- * Drop any threads (put them on ready)
- * that are waiting for the given tid
- * to terminate.
- */
+bool mcontrol_is_running();
+
+bool mcontrol_exist_tid(int tid);
+
+bool mcontrol_waiting_already_check(int tid);
+
 void mcontrol_waiting_drop(int tid);
 
-#endif /* INCLUDE_MCONTROL_H_ */
+void mcontrol_locked_remove(int tid);
+
+#endif //MTHREAD_MCONTROL_H

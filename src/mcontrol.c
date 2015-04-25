@@ -1,177 +1,135 @@
-/*
- * mcontrol.c
- *
- *  Created on: Apr 2, 2015
- *      Author: lucas
- */
+//
+// Created by lucas on 21/04/15.
+//
 
-#include <stdlib.h>
+#include <mlist.h>
 #include <stdio.h>
-
-#include "mqueue.h"
-#include "mtcb.h"
 #include "mcontrol.h"
 
-TCBQUEUE *ready_low;
-TCBQUEUE *ready_medium;
-TCBQUEUE *ready_high;
-TCBQUEUE *blocked;
-TCB_t *running;
+MLIST *ready_low = NULL;
+MLIST *ready_medium = NULL;
+MLIST *ready_high = NULL;
+MLIST *waiting = NULL;
+MLIST *locked = NULL;
+METCB *running = NULL;
 
-int initialized = 0;
+void mcontrol_finalize_thread() {
+    METCB *etcb;
 
-void mcontrol_initialize_check_and_do() {
-	if (!initialized) {
-		initialized = 1;
-		mcontrol_initialize();
-	}
+    etcb = mcontrol_pop_running();
+    mcontrol_waiting_drop(etcb->tcb.tid);
+    metcb_destroy(etcb);
+
+    mcontrol_schedule();
 }
 
 void mcontrol_initialize() {
-	/*
-	 * initialize queues
-	 */
-	ready_low = mqueue_create();
-	ready_medium = mqueue_create();
-	ready_high = mqueue_create();
-	blocked = mqueue_create();
-	running = NULL;
-
-	/*
-	 * initialize mtcb creator
-	 */
-	mtcb_initialize();
-
-	/*
-	 * initialize main thread
-	 */
-	TCB_t *thread;
-	thread = mtcb_create( NULL, NULL );
-	thread->prio = PRIORITY_LOW;
-	mcontrol_add_running( thread );
-	mtcb_context_save( thread );
-}
-
-void mcontrol_destroy_main() {
-	mqueue_destroy( ready_low );
-	mqueue_destroy( ready_medium );
-	mqueue_destroy( ready_high );
-	mqueue_destroy( blocked );
-
-	mtcb_finalize();
-}
-
-void mcontrol_finalize_thread() {
-	TCB_t *thread;
-
-	thread = mcontrol_pop_running();
-
-	mcontrol_waiting_drop( thread->tid );
-	mtcb_destroy( thread );
-
-	mcontrol_schedule();
+    ready_high = mlist_create();
+    ready_medium = mlist_create();
+    ready_low = mlist_create();
+    waiting = mlist_create();
+    locked = mlist_create();
+    
+    running = NULL;
 }
 
 void mcontrol_schedule() {
-	TCB_t *thread;
+    METCB *etcb;
 
-	if (running != NULL) {
-		printf("[WARNING] running != NULL on schedule!\n");
-	}
+    if (running != NULL) printf("ERROR\n");
 
-	thread = mcontrol_pop_highest_priority();
-	if (!thread) printf("[ERROR] no more threads left!\n");
-	mcontrol_add_running( thread );
-	mtcb_context_restore( thread );
+    etcb = mcontrol_pop_highest_priority();
+    if (!etcb) printf("ERROR\n");
+    mcontrol_add_running(etcb);
+    metcb_context_restore(etcb);
 }
 
-void mcontrol_add_ready(TCB_t *thread) {
-	switch (thread->prio) {
-	case PRIORITY_HIGH:
-		mqueue_add_last( ready_high, thread );
-		break;
-	case PRIORITY_MEDIUM:
-		mqueue_add_last( ready_medium, thread );
-		break;
-	case PRIORITY_LOW:
-		mqueue_add_last( ready_low, thread );
-		break;
-	}
+void mcontrol_add_ready(METCB *etcb) {
+    switch (etcb->tcb.prio) {
+        case PRIORITY_HIGH:
+            mlist_push_end(ready_high, etcb);
+            break;
+        case PRIORITY_LOW:
+            mlist_push_end(ready_low, etcb);
+            break;
+        case PRIORITY_MEDIUM:
+            mlist_push_end(ready_medium, etcb);
+            break;
+        default:
+            break;
+    }
 }
 
-void mcontrol_add_blocked(TCB_t *thread) {
-	mqueue_add_last( blocked, thread );
+void mcontrol_add_waiting(METCB *etcb) {
+    mlist_push_end(waiting, etcb);
 }
 
-void mcontrol_add_running(TCB_t *thread) {
-	running = thread;
+void mcontrol_add_locked(METCB *etcb) {
+    mlist_push_end(locked, etcb);
 }
 
-TCB_t *mcontrol_pop_highest_priority() {
-	if (mqueue_get_first( ready_high )) {
-		return mqueue_pop_first( ready_high );
-	} else if (mqueue_get_first( ready_medium )) {
-		return mqueue_pop_first( ready_medium );
-	} else if (mqueue_get_first( ready_low )) {
-		return mqueue_pop_first( ready_low );
-	}
-
-	return NULL;
+void mcontrol_add_running(METCB *etcb) {
+    running = etcb;
 }
 
-TCB_t *mcontrol_pop_running() {
-	TCB_t *thread;
+METCB *mcontrol_pop_highest_priority() {
+    if (mlist_is_empty(ready_high) == false) {
+        return mlist_pop_first(ready_high);
+    } else if (mlist_is_empty(ready_medium) == false) {
+        return mlist_pop_first(ready_medium);
+    } else if (mlist_is_empty(ready_low) == false) {
+        return mlist_pop_first(ready_low);
+    }
 
-	thread = running;
-	running = NULL;
-
-	return thread;
+    return NULL;
 }
 
-int mcontrol_is_running() {
-	if (running == NULL) {
-		return 0;
-	}
-
-	return 1;
+METCB *mcontrol_pop_running() {
+    METCB *etcb;
+    etcb = running;
+    running = NULL;
+    return etcb;
 }
 
-TCB_t *mcontrol_get_running() {
-	return running;
+bool mcontrol_is_running() {
+    if (running != NULL) {
+        return true;
+    }
+
+    return false;
 }
 
-int mcontrol_mtcb_exist_tid(int tid) {
-	return ( mqueue_exist_tid( ready_high, tid ) ||
-			 mqueue_exist_tid( ready_medium, tid ) ||
-			 mqueue_exist_tid( ready_low, tid) ||
-			 mqueue_exist_tid( blocked, tid ) ||
-			 running->tid == tid );
+bool mcontrol_exist_tid(int tid) {
+    if (    mlist_exist_tid(ready_low, tid) ||
+            mlist_exist_tid(ready_medium, tid) ||
+            mlist_exist_tid(ready_high, tid) ||
+            mlist_exist_tid(waiting, tid) ||
+            mlist_exist_tid(locked, tid)) {
+
+        return true;
+    }
+
+    return false;
 }
 
-int mcontrol_waiting_already_check(int tid) {
-	TCB_t *aux0;
-
-	aux0 = mqueue_get_first( blocked );
-	while (aux0 != NULL) {
-		if (aux0->waiting == tid) {
-			return 1;
-		}
-	}
-
-	return 0;
+bool mcontrol_waiting_already_check(int tid) {
+    return mlist_exist_waiting_tid(waiting, tid);
 }
 
 void mcontrol_waiting_drop(int tid) {
-	TCB_t *aux0;
+    METCB *etcb;
 
-	aux0 = mqueue_get_first( blocked );
-	while (aux0 != NULL) {
-		if (aux0->waiting == tid) {
-			mqueue_pop_tid( blocked, aux0->tid );
-			mcontrol_add_ready( aux0 );
-			return;
-		}
+    etcb = mlist_pop_waiting_tid(waiting, tid);
+    if (!etcb) return;
 
-		aux0 = aux0->next;
-	}
+    etcb->waiting_tid = TID_INVALID;
+    mcontrol_add_ready(etcb);
+}
+
+
+void mcontrol_locked_remove(int tid) {
+    METCB *metcb;
+
+    metcb = mlist_pop_tid(locked, tid);
+    if (!metcb) return;
 }

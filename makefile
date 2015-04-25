@@ -20,11 +20,7 @@ INCLUDES := $(wildcard $(INCDIR)/*.h)
 OBJECTS  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 rm       = rm -f
 
-all: $(OBJECTS) $(BINDIR)/$(TARGET) test
-
-test:
-	gcc -g -o $(BINDIR)/mthread.out $(OBJECTS)
-	@echo test created!
+all: $(BINDIR)/$(TARGET)
 
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	@$(LINKER) $@ $(OBJECTS) $(LFLAGS)
