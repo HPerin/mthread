@@ -4,7 +4,7 @@
 
 #include <stddef.h>
 #include <mlist.h>
-#include <stdlib.h>
+#include <malloc.h>
 
 MLIST *mlist_create() {
     MLIST *mlist;

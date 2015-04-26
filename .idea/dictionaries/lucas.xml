@@ -11,6 +11,7 @@
       <w>mmutex</w>
       <w>mtcb</w>
       <w>mthread</w>
+      <w>mthreads</w>
       <w>munlock</w>
       <w>mwait</w>
       <w>myield</w>

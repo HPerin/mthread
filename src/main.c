@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <mthread.h>
+#include <assert.h>
 
 void test_mlist_pop_tid() {
     int THREADS = 10000;
@@ -12,15 +13,15 @@ void test_mlist_pop_tid() {
 
     for ( i = 0; i < THREADS; i++ ) {
         tcb = malloc(sizeof(METCB));
-        if (!tcb) printf("[ERROR] 001\n");
+        assert(tcb != NULL);
         tcb->tcb.tid = i;
         mlist_push_end(mlist, tcb);
     }
 
     for ( i = THREADS - 1; i >= 0; i-- ) {
         tcb = mlist_pop_tid(mlist, i);
-        if (!tcb) printf("[ERROR] 002\n");
-        if (tcb->tcb.tid != i) printf("[ERROR] 003\n");
+        assert(tcb != NULL);
+        assert(tcb->tcb.tid == i);
     }
 }
 
@@ -32,15 +33,15 @@ void test_mlist_pop_first() {
 
     for ( i = 0; i < THREADS; i++ ) {
         tcb = malloc(sizeof(METCB));
-        if (!tcb) printf("[ERROR] 004\n");
+        assert(tcb != NULL);
         tcb->tcb.tid = i;
         mlist_push_end(mlist, tcb);
     }
 
     for ( i = 0; i < THREADS; i++ ) {
         tcb = mlist_pop_first(mlist);
-        if (!tcb) printf("[ERROR] 005\n");
-        if (tcb->tcb.tid != i) printf("[ERROR] 006\n");
+        assert(tcb != NULL);
+        assert(tcb->tcb.tid == i);
     }
 }
 
@@ -52,15 +53,15 @@ void test_mlist_exist_tid() {
 
     for ( i = 0; i < THREADS; i++ ) {
         tcb = malloc(sizeof(METCB));
-        if (!tcb) printf("[ERROR] 007\n");
+        assert(tcb != NULL);
         tcb->tcb.tid = i;
         mlist_push_end(mlist, tcb);
     }
 
     for ( i = 0; i < THREADS; i++ ) {
-        if (mlist_exist_tid(mlist, i) != true) printf("[ERROR] 008\n");
-        if (mlist_exist_tid(mlist, i - THREADS) != false) printf("[ERROR] 009\n");
-        if (mlist_exist_tid(mlist, i + THREADS) != false) printf("[ERROR] 010\n");
+        assert(mlist_exist_tid(mlist, i) == true);
+        assert(mlist_exist_tid(mlist, i - THREADS == false));
+        assert(mlist_exist_tid(mlist, i + THREADS == false));
     }
 }
 
@@ -76,7 +77,7 @@ void test_mlist_pop_tid_random() {
 
     for ( i = 0; i < THREADS; i++ ) {
         tcb = malloc(sizeof(METCB));
-        if (!tcb) printf("[ERROR] 011\n");
+        assert(tcb != NULL);
         tcb->tcb.tid = i;
         mlist_push_end(mlist, tcb);
     }
@@ -95,13 +96,13 @@ void test_mlist_pop_tid_random() {
             i--;
 
             tcb = mlist_pop_tid(mlist, r);
-            if (tcb) printf("[ERROR] 012\n");
+            assert(tcb == NULL);
         } else {
             already_checked[i] = r;
 
             tcb = mlist_pop_tid(mlist, r);
-            if (!tcb) printf("[ERROR] 013\n");
-            if (tcb->tcb.tid != r) printf("[ERROR] 014\n");
+            assert(tcb != NULL);
+            assert(tcb->tcb.tid == r);
         }
     }
 }
@@ -164,7 +165,7 @@ void test_mutex() {
 
 #define MAX_THR 10
 #define MAX_SIZE 250
-int vector[MAX_THR];
+int vector[MAX_SIZE];
 int inc;
 
 void test_prio_0(void *arg) {
@@ -179,7 +180,6 @@ void test_prio_0(void *arg) {
 }
 
 void test_prio() {
-    int a;
     int i, pid[MAX_THR];
 
 

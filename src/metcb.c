@@ -4,8 +4,8 @@
 
 #include <stddef.h>
 #include "metcb.h"
-#include <stdlib.h>
 #include <mcontrol.h>
+#include <malloc.h>
 
 ucontext_t *etcb_get_finish_context() {
     static ucontext_t *finish_context = NULL;

@@ -3,11 +3,11 @@ TARGET   = libmthread.a
 
 CC       = gcc
 # compiling flags here
-CFLAGS   = -Wall -g
+CFLAGS   = -Wall
 
 LINKER   = ar rcs
 # linking flags here
-LFLAGS   = 
+LFLAGS   =
 
 # change these to set the proper directories where each files shoould be
 SRCDIR   = src

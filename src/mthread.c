@@ -12,6 +12,7 @@ static bool initialized = false;
 int mcreate(int priority, void (*start)(void *), void *arg) {
     METCB *metcb;
 
+
     if (!initialized) {
         initialized = true;
         mcontrol_initialize();

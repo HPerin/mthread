@@ -1,4 +1,5 @@
 # Object files
+/bin
 *.o
 *.ko
 *.obj
@@ -9,6 +10,7 @@
 *.pch
 
 # Libraries
+/lib
 *.lib
 *.a
 *.la

@@ -16,6 +16,7 @@ typedef struct mmutex {
     MLIST *mlist;
 } mmutex_t;
 
+
 void mmutex_initialize(mmutex_t *mtx);
 
 void mmutex_lock(mmutex_t *mtx);

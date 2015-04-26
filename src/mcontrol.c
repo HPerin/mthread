@@ -3,7 +3,8 @@
 //
 
 #include <mlist.h>
-#include <stdio.h>
+#include <assert.h>
+#include <stddef.h>
 #include "mcontrol.h"
 
 MLIST *ready_low = NULL;
@@ -36,10 +37,9 @@ void mcontrol_initialize() {
 void mcontrol_schedule() {
     METCB *etcb;
 
-    if (running != NULL) printf("ERROR\n");
-
+    assert(running == NULL);
     etcb = mcontrol_pop_highest_priority();
-    if (!etcb) printf("ERROR\n");
+    assert(etcb != NULL);
     mcontrol_add_running(etcb);
     metcb_context_restore(etcb);
 }
@@ -131,5 +131,6 @@ void mcontrol_locked_remove(int tid) {
     METCB *metcb;
 
     metcb = mlist_pop_tid(locked, tid);
-    if (!metcb) return;
+    assert(metcb != NULL);
+    metcb_destroy(metcb);
 }
