@@ -6,6 +6,8 @@
 #include "metcb.h"
 #include <mcontrol.h>
 #include <malloc.h>
+#include <string.h>
+#include <assert.h>
 
 ucontext_t *etcb_get_finish_context() {
     static ucontext_t *finish_context = NULL;
@@ -69,11 +71,9 @@ METCB *metcb_create_copy(METCB *src) {
 
     metcb = malloc(sizeof(METCB));
     if (!metcb) return NULL;
+    memcpy(metcb, src, sizeof(METCB));
 
-    metcb->tcb = src->tcb;
-    metcb->next = src->next;
-    metcb->prev = src->prev;
-    metcb->waiting_tid = src->waiting_tid;
+    assert(metcb->tcb.tid == src->tcb.tid);
 
     return metcb;
 }

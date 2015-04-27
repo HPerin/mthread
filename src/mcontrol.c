@@ -29,6 +29,7 @@ void mcontrol_initialize() {
     ready_medium = mlist_create();
     ready_low = mlist_create();
     waiting = mlist_create();
+    //locked = waiting;
     locked = mlist_create();
     
     running = NULL;

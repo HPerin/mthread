@@ -7,20 +7,23 @@
 #include <stddef.h>
 #include "mthread.h"
 
-static bool initialized = false;
-
-int mcreate(int priority, void (*start)(void *), void *arg) {
+void initialize() {
+    static bool initialized = false;
     METCB *metcb;
-
 
     if (!initialized) {
         initialized = true;
         mcontrol_initialize();
 
         metcb = metcb_create(PRIORITY_HIGH, NULL, NULL);
-        if (!metcb) return -1;
         mcontrol_add_running(metcb);
     }
+}
+
+int mcreate(int priority, void (*start)(void *), void *arg) {
+    METCB *metcb;
+
+    initialize();
 
     metcb = metcb_create(priority, start, arg);
     if (!metcb) return -1;
@@ -32,7 +35,7 @@ int mcreate(int priority, void (*start)(void *), void *arg) {
 int myield() {
     METCB *metcb;
 
-    if (!initialized) return -1;
+    initialize();
 
     metcb = mcontrol_pop_running();
     if (!metcb) return -1;
@@ -49,7 +52,7 @@ int myield() {
 int mwait(int tid) {
     METCB *metcb;
 
-    if (!initialized) return -1;
+    initialize();
     if (mcontrol_exist_tid(tid) == false) return -1;
     if (mcontrol_waiting_already_check(tid)) return -1;
 
@@ -67,7 +70,7 @@ int mwait(int tid) {
 
 int mmutex_init(mmutex_t *mtx) {
 
-    if (!initialized) return -1;
+    initialize();
     if (!mtx) return -1;
 
     mmutex_initialize(mtx);
@@ -78,7 +81,7 @@ int mmutex_init(mmutex_t *mtx) {
 int mlock(mmutex_t *mtx) {
     METCB *metcb;
 
-    if (!initialized) return -1;
+    initialize();
     if (!mtx) return -1;
 
     if (mmutex_is_locked(mtx) == true) {
@@ -100,7 +103,7 @@ int mlock(mmutex_t *mtx) {
 int munlock(mmutex_t *mtx) {
     METCB *metcb;
 
-    if (!initialized) return -1;
+    initialize();
     if (!mtx) return -1;
 
     if (mmutex_is_empty(mtx) == false) {
