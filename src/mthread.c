@@ -7,23 +7,9 @@
 #include <stddef.h>
 #include "mthread.h"
 
-void initialize() {
-    static bool initialized = false;
+
+int mcreate_func(int priority, void (*start)(void *), void *arg) {
     METCB *metcb;
-
-    if (!initialized) {
-        initialized = true;
-        mcontrol_initialize();
-
-        metcb = metcb_create(PRIORITY_HIGH, NULL, NULL);
-        mcontrol_add_running(metcb);
-    }
-}
-
-int mcreate(int priority, void (*start)(void *), void *arg) {
-    METCB *metcb;
-
-    initialize();
 
     metcb = metcb_create(priority, start, arg);
     if (!metcb) return -1;
@@ -34,8 +20,6 @@ int mcreate(int priority, void (*start)(void *), void *arg) {
 
 int myield() {
     METCB *metcb;
-
-    initialize();
 
     metcb = mcontrol_pop_running();
     if (!metcb) return -1;
@@ -52,7 +36,6 @@ int myield() {
 int mwait(int tid) {
     METCB *metcb;
 
-    initialize();
     if (mcontrol_exist_tid(tid) == false) return -1;
     if (mcontrol_waiting_already_check(tid)) return -1;
 
@@ -68,9 +51,9 @@ int mwait(int tid) {
     return 0;
 }
 
-int mmutex_init(mmutex_t *mtx) {
 
-    initialize();
+int mmutex_init_func(mmutex_t *mtx) {
+
     if (!mtx) return -1;
 
     mmutex_initialize(mtx);
@@ -81,7 +64,6 @@ int mmutex_init(mmutex_t *mtx) {
 int mlock(mmutex_t *mtx) {
     METCB *metcb;
 
-    initialize();
     if (!mtx) return -1;
 
     if (mmutex_is_locked(mtx) == true) {
@@ -103,7 +85,6 @@ int mlock(mmutex_t *mtx) {
 int munlock(mmutex_t *mtx) {
     METCB *metcb;
 
-    initialize();
     if (!mtx) return -1;
 
     if (mmutex_is_empty(mtx) == false) {
@@ -116,3 +97,34 @@ int munlock(mmutex_t *mtx) {
 
     return 0;
 }
+
+void initialize() {
+    METCB *metcb;
+
+    mcontrol_initialize();
+
+    metcb = metcb_create(PRIORITY_HIGH, NULL, NULL);
+    mcontrol_add_running(metcb);
+
+    mcreate = &mcreate_func;
+    mmutex_init = &mmutex_init_func;
+}
+
+/*
+ * Initialization functions
+ */
+
+int initialize_by_mcreate(int priority, void (*start)(void *), void *arg) {
+    initialize();
+
+    return mcreate_func(priority, start, arg);
+}
+
+int initialize_by_mmutex_init(mmutex_t *mtx) {
+    initialize();
+
+    return mmutex_init_func(mtx);
+}
+
+int (*mcreate)(int, void(*)(void*), void*) = &initialize_by_mcreate;
+int (*mmutex_init)(mmutex_t *mtx) = &initialize_by_mmutex_init;
