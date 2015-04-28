@@ -8,11 +8,6 @@
 #include "mdata.h"
 
 /*
- * Do not use this function!!!
- */
-//int mthread_initialize(int, void (*)(void*), void*);
-
-/*
  * Use this function to create threads,
  * also, this has to be the first
  * function to be called from mthreads
@@ -26,7 +21,6 @@
  * @ret: created thread tid if successful, -1 if failed.
  */
 extern int (*mcreate)(int prio, void (*start)(void*), void *arg);
-//int mcreate (int prio, void (*start)(void*), void *arg);
 
 /*
  * This gives away the execution privilege

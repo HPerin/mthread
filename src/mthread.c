@@ -98,6 +98,10 @@ int munlock(mmutex_t *mtx) {
     return 0;
 }
 
+/*
+ * Initialization functions
+ */
+
 void initialize() {
     METCB *metcb;
 
@@ -109,10 +113,6 @@ void initialize() {
     mcreate = &mcreate_func;
     mmutex_init = &mmutex_init_func;
 }
-
-/*
- * Initialization functions
- */
 
 int initialize_by_mcreate(int priority, void (*start)(void *), void *arg) {
     initialize();
