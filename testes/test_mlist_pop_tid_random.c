@@ -8,7 +8,7 @@
 #include "../include/mlist.h"
 
 void test_mlist_pop_tid_random() {
-    int THREADS = 100;
+    int THREADS = 5;
     MLIST *mlist = mlist_create();
     METCB *tcb;
     int i, j, r;
@@ -51,10 +51,12 @@ void test_mlist_pop_tid_random() {
 
 int main() {
     int i;
-    int RUN_TIMES = 10000;
+    int RUN_TIMES = 30000;
 
     for (i = 0; i < RUN_TIMES; i++)
         test_mlist_pop_tid_random();
+
+    printf("SUCCESS!\n");
 
     return 0;
 }

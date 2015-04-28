@@ -8,7 +8,7 @@
 #include "../include/mlist.h"
 
 void test_mlist_pop_tid() {
-    int THREADS = 10000;
+    int THREADS = 30000;
     MLIST *mlist = mlist_create();
     METCB *tcb;
     int i;
@@ -29,6 +29,8 @@ void test_mlist_pop_tid() {
 
 int main() {
     test_mlist_pop_tid();
+
+    printf("SUCCESS!\n");
 
     return 0;
 }

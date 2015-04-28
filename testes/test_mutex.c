@@ -17,7 +17,7 @@ void test_mutex_0(void *arg) {
 
 void test_mutex() {
     mmutex_t mtx;
-    int THREADS = 10000;
+    int THREADS = 30000;
     int tid[THREADS];
     int i;
 
@@ -34,6 +34,8 @@ void test_mutex() {
     for ( i = 0; i < THREADS; i++ ) {
         mwait( tid[i] );
     }
+
+    printf("SUCCESS!\n");
 }
 
 int main() {

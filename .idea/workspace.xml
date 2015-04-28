@@ -12,8 +12,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="92758254-db6f-4883-8d9b-e17b1d0b3758" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/mthread.c" afterPath="$PROJECT_DIR$/src/mthread.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/include/mthread.h" afterPath="$PROJECT_DIR$/include/mthread.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testes/test_mlist_exist_tid.c" afterPath="$PROJECT_DIR$/testes/test_mlist_exist_tid.c" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testes/test_mlist_pop_first.c" afterPath="$PROJECT_DIR$/testes/test_mlist_pop_first.c" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testes/test_mlist_pop_tid.c" afterPath="$PROJECT_DIR$/testes/test_mlist_pop_tid.c" />
@@ -402,7 +400,13 @@
       <option name="project" value="LOCAL" />
       <updated>1430108855045</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Performance improved">
+      <created>1430235045947</created>
+      <option name="number" value="00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1430235045947</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
