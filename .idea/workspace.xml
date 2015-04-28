@@ -12,6 +12,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="92758254-db6f-4883-8d9b-e17b1d0b3758" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/exemplos/Makefile" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/exemplos/exemplo.c" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testes/makefile" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/exemplos/mandel.c" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testes/run.sh" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testes/test_mlist_exist_tid.c" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testes/test_mlist_pop_first.c" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testes/test_mlist_pop_tid.c" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testes/test_mlist_pop_tid_random.c" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testes/test_mthread.c" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testes/test_mutex.c" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/exemplos/teste_prio.c" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/exemplos/teste_vetor.c" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testes/times.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
