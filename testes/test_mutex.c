@@ -34,12 +34,12 @@ void test_mutex() {
     for ( i = 0; i < THREADS; i++ ) {
         mwait( tid[i] );
     }
-
-    printf("SUCCESS!\n");
 }
 
 int main() {
     test_mutex();
+
+    printf("SUCCESS!\n");
 
     return 0;
 }

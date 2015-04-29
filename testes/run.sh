@@ -32,3 +32,10 @@ time ./test_mutex.out
 
 echo
 echo
+echo :test_mvector_exist_tid
+time ./test_mvector_exist_tid.out
+
+echo
+echo
+echo :test_mvector_pop_tid
+time ./test_mvector_pop_tid.out

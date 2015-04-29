@@ -7,7 +7,6 @@
 #include <stddef.h>
 #include "mthread.h"
 
-
 int mcreate_func(int priority, void (*start)(void *), void *arg) {
     METCB *metcb;
 
@@ -40,8 +39,8 @@ int mwait(int tid) {
     if (mcontrol_waiting_already_check(tid)) return -1;
 
     metcb = mcontrol_pop_running();
-    mcontrol_add_waiting(metcb);
     metcb->waiting_tid = tid;
+    mcontrol_add_waiting(metcb);
     metcb_context_save(metcb);
 
     if (mcontrol_is_running() == false) {
@@ -69,7 +68,7 @@ int mlock(mmutex_t *mtx) {
     if (mmutex_is_locked(mtx) == true) {
         metcb = mcontrol_pop_running();
         mmutex_add(mtx, metcb);
-        mcontrol_add_locked(metcb_create_copy(metcb));
+        mcontrol_add_locked(metcb);
         metcb_context_save(metcb);
 
         if (mcontrol_is_running() == false) {
@@ -106,6 +105,7 @@ void initialize() {
     METCB *metcb;
 
     mcontrol_initialize();
+    metcb_initialize();
 
     metcb = metcb_create(PRIORITY_HIGH, NULL, NULL);
     mcontrol_add_running(metcb);

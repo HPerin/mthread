@@ -13,6 +13,7 @@
       <w>mthread</w>
       <w>mthreads</w>
       <w>munlock</w>
+      <w>mvector</w>
       <w>mwait</w>
       <w>myield</w>
       <w>prio</w>

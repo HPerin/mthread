@@ -17,4 +17,4 @@ set(HEADER_FILES include/mthread.h
                  include/metcb.h
                  include/mcontrol.h)
 
-add_executable(mthread ${SOURCE_FILES} ${HEADER_FILES})
+add_executable(mthread ${SOURCE_FILES} ${HEADER_FILES} include/mvector.h src/mvector.c)

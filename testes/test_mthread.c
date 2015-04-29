@@ -30,12 +30,12 @@ void test_mthread() {
     for ( i = 0; i < THREADS; i++ ) {
         mwait( tid[i] );
     }
-
-    printf("SUCCESS!\n");
 }
 
 int main() {
     test_mthread();
+
+    printf("SUCCESS!\n");
 
     return 0;
 }

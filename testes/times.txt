@@ -1,6 +1,0 @@
-:test_mlist_exist_tid
-:test_mlist_pop_first
-:test_mlist_pop_tid
-:test_mlist_exist_tid_random
-:test_mthread
-:test_mutex

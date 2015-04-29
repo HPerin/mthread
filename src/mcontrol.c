@@ -5,13 +5,16 @@
 #include <mlist.h>
 #include <assert.h>
 #include <stddef.h>
+#include <mvector.h>
+#include <stdio.h>
 #include "mcontrol.h"
 
 MLIST *ready_low = NULL;
 MLIST *ready_medium = NULL;
 MLIST *ready_high = NULL;
-MLIST *waiting = NULL;
-MLIST *locked = NULL;
+MVECTOR *waiting = NULL;
+MVECTOR *waiting_tid = NULL;
+MVECTOR *locked = NULL;
 METCB *running = NULL;
 
 void mcontrol_finalize_thread() {
@@ -28,9 +31,9 @@ void mcontrol_initialize() {
     ready_high = mlist_create();
     ready_medium = mlist_create();
     ready_low = mlist_create();
-    waiting = mlist_create();
-    //locked = waiting;
-    locked = mlist_create();
+    waiting = mvector_create();
+    waiting_tid = mvector_create();
+    locked = mvector_create();
     
     running = NULL;
 }
@@ -62,11 +65,12 @@ void mcontrol_add_ready(METCB *etcb) {
 }
 
 void mcontrol_add_waiting(METCB *etcb) {
-    mlist_push_end(waiting, etcb);
+    mvector_insert(waiting, etcb, etcb->tcb.tid);
+    mvector_insert(waiting_tid, etcb, etcb->waiting_tid);
 }
 
 void mcontrol_add_locked(METCB *etcb) {
-    mlist_push_end(locked, etcb);
+    mvector_insert(locked, etcb, etcb->tcb.tid);
 }
 
 void mcontrol_add_running(METCB *etcb) {
@@ -104,8 +108,8 @@ bool mcontrol_exist_tid(int tid) {
     if (    mlist_exist_tid(ready_low, tid) ||
             mlist_exist_tid(ready_medium, tid) ||
             mlist_exist_tid(ready_high, tid) ||
-            mlist_exist_tid(waiting, tid) ||
-            mlist_exist_tid(locked, tid)) {
+            mvector_exist(waiting, tid) ||
+            mvector_exist(locked, tid)) {
 
         return true;
     }
@@ -114,24 +118,23 @@ bool mcontrol_exist_tid(int tid) {
 }
 
 bool mcontrol_waiting_already_check(int tid) {
-    return mlist_exist_waiting_tid(waiting, tid);
+    return mvector_exist(waiting_tid, tid);
 }
 
 void mcontrol_waiting_drop(int tid) {
     METCB *etcb;
 
-    etcb = mlist_pop_waiting_tid(waiting, tid);
+    etcb = mvector_pop(waiting_tid, tid);
     if (!etcb) return;
+    assert(mvector_pop(waiting, etcb->tcb.tid) != NULL);
 
     etcb->waiting_tid = TID_INVALID;
     mcontrol_add_ready(etcb);
 }
 
-
 void mcontrol_locked_remove(int tid) {
     METCB *metcb;
 
-    metcb = mlist_pop_tid(locked, tid);
+    metcb = mvector_pop(locked, tid);
     assert(metcb != NULL);
-    metcb_destroy(metcb);
 }

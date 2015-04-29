@@ -30,6 +30,8 @@ typedef struct s_metcb {
     struct s_metcb *prev;
 } METCB;
 
+void metcb_initialize();
+
 METCB *metcb_create(int prio, void (*start)(void *), void *arg);
 
 METCB *metcb_create_copy(METCB *src);

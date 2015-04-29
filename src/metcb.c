@@ -3,27 +3,27 @@
 //
 
 #include <stddef.h>
-#include "metcb.h"
+#include <metcb.h>
 #include <mcontrol.h>
 #include <malloc.h>
 #include <string.h>
 #include <assert.h>
 
+ucontext_t *finish_context = NULL;
+
+void metcb_initialize() {
+    finish_context = malloc(sizeof(ucontext_t));
+
+    getcontext(finish_context);
+
+    finish_context->uc_link = NULL;
+    finish_context->uc_stack.ss_sp = malloc(SIGSTKSZ);
+    finish_context->uc_stack.ss_size = SIGSTKSZ;
+
+    makecontext(finish_context, mcontrol_finalize_thread, 0);
+}
+
 ucontext_t *etcb_get_finish_context() {
-    static ucontext_t *finish_context = NULL;
-
-    if (finish_context == NULL) {
-        finish_context = malloc(sizeof(ucontext_t));
-
-        getcontext(finish_context);
-
-        finish_context->uc_link = NULL;
-        finish_context->uc_stack.ss_sp = malloc(SIGSTKSZ);
-        finish_context->uc_stack.ss_size = SIGSTKSZ;
-
-        makecontext(finish_context, mcontrol_finalize_thread, 0);
-    }
-
     return finish_context;
 }
 
