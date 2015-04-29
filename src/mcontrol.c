@@ -4,14 +4,12 @@
 
 #include <mlist.h>
 #include <assert.h>
-#include <stddef.h>
 #include <mvector.h>
-#include <stdio.h>
+#include <malloc.h>
 #include "mcontrol.h"
 
-MLIST *ready_low = NULL;
-MLIST *ready_medium = NULL;
-MLIST *ready_high = NULL;
+MLIST **ready = NULL;
+MVECTOR **v_ready = NULL;
 MVECTOR *waiting = NULL;
 MVECTOR *waiting_tid = NULL;
 MVECTOR *locked = NULL;
@@ -28,9 +26,16 @@ void mcontrol_finalize_thread() {
 }
 
 void mcontrol_initialize() {
-    ready_high = mlist_create();
-    ready_medium = mlist_create();
-    ready_low = mlist_create();
+    ready = malloc(3 * sizeof(MLIST*));
+    ready[PRIORITY_HIGH] = mlist_create();
+    ready[PRIORITY_MEDIUM] = mlist_create();
+    ready[PRIORITY_LOW] = mlist_create();
+
+    v_ready = malloc(3 * sizeof(MVECTOR*));
+    v_ready[PRIORITY_HIGH] = mvector_create();
+    v_ready[PRIORITY_MEDIUM] = mvector_create();
+    v_ready[PRIORITY_LOW] = mvector_create();
+
     waiting = mvector_create();
     waiting_tid = mvector_create();
     locked = mvector_create();
@@ -49,19 +54,8 @@ void mcontrol_schedule() {
 }
 
 void mcontrol_add_ready(METCB *etcb) {
-    switch (etcb->tcb.prio) {
-        case PRIORITY_HIGH:
-            mlist_push_end(ready_high, etcb);
-            break;
-        case PRIORITY_LOW:
-            mlist_push_end(ready_low, etcb);
-            break;
-        case PRIORITY_MEDIUM:
-            mlist_push_end(ready_medium, etcb);
-            break;
-        default:
-            break;
-    }
+    mvector_insert(v_ready[etcb->tcb.prio], etcb, etcb->tcb.tid);
+    mlist_push_end(ready[etcb->tcb.prio], etcb);
 }
 
 void mcontrol_add_waiting(METCB *etcb) {
@@ -78,15 +72,21 @@ void mcontrol_add_running(METCB *etcb) {
 }
 
 METCB *mcontrol_pop_highest_priority() {
-    if (mlist_is_empty(ready_high) == false) {
-        return mlist_pop_first(ready_high);
-    } else if (mlist_is_empty(ready_medium) == false) {
-        return mlist_pop_first(ready_medium);
-    } else if (mlist_is_empty(ready_low) == false) {
-        return mlist_pop_first(ready_low);
+    METCB *metcb = NULL;
+
+    if (mlist_is_empty(ready[PRIORITY_HIGH]) == false) {
+        metcb = mlist_pop_first(ready[PRIORITY_HIGH]);
+        mvector_pop(v_ready[PRIORITY_HIGH], metcb->tcb.tid);
+    } else if (mlist_is_empty(ready[PRIORITY_MEDIUM]) == false) {
+        metcb = mlist_pop_first(ready[PRIORITY_MEDIUM]);
+        mvector_pop(v_ready[PRIORITY_MEDIUM], metcb->tcb.tid);
+    } else if (mlist_is_empty(ready[PRIORITY_LOW]) == false) {
+        metcb = mlist_pop_first(ready[PRIORITY_LOW]);
+        mvector_pop(v_ready[PRIORITY_LOW], metcb->tcb.tid);
     }
 
-    return NULL;
+    assert(metcb != NULL);
+    return metcb;
 }
 
 METCB *mcontrol_pop_running() {
@@ -105,9 +105,9 @@ bool mcontrol_is_running() {
 }
 
 bool mcontrol_exist_tid(int tid) {
-    if (    mlist_exist_tid(ready_low, tid) ||
-            mlist_exist_tid(ready_medium, tid) ||
-            mlist_exist_tid(ready_high, tid) ||
+    if (    mvector_exist(v_ready[PRIORITY_HIGH], tid) ||
+            mvector_exist(v_ready[PRIORITY_MEDIUM], tid) ||
+            mvector_exist(v_ready[PRIORITY_LOW], tid) ||
             mvector_exist(waiting, tid) ||
             mvector_exist(locked, tid)) {
 
