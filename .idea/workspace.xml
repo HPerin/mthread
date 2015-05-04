@@ -12,11 +12,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="92758254-db6f-4883-8d9b-e17b1d0b3758" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testes/makefile" afterPath="$PROJECT_DIR$/testes/makefile" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/mthread.c" afterPath="$PROJECT_DIR$/src/mthread.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/include/mthread.h" afterPath="$PROJECT_DIR$/include/mthread.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testes/test_mlist_pop_tid_random.c" afterPath="$PROJECT_DIR$/testes/test_mlist_pop_tid_random.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testes/test_mthread.c" afterPath="$PROJECT_DIR$/testes/test_mthread.c" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/relatorio/relatorio.pdf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/relatorio/relatorio.tex" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="mthread.iws" />
@@ -81,8 +78,8 @@
       <file leaf-file-name="test_mlist_pop_tid_random.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/testes/test_mlist_pop_tid_random.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6959153">
-              <caret line="23" column="25" selection-start-line="23" selection-start-column="25" selection-end-line="23" selection-end-column="25" />
+            <state vertical-scroll-proportion="0.90771556">
+              <caret line="30" column="18" selection-start-line="30" selection-start-column="18" selection-end-line="30" selection-end-column="18" />
               <folding>
                 <element signature="e#40#58#0" expanded="true" />
               </folding>
@@ -438,7 +435,13 @@
       <option name="project" value="LOCAL" />
       <updated>1430759042885</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Adaptation to the standards.">
+      <created>1430759991509</created>
+      <option name="number" value="00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1430759991509</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -492,7 +495,8 @@
     <MESSAGE value="Added vector struct, to improve performance a lot." />
     <MESSAGE value="Added vector struct in ready lists, to improve the existence check performance a lot." />
     <MESSAGE value="Creation of the report.&#10;Final changes on tests." />
-    <option name="LAST_COMMIT_MESSAGE" value="Creation of the report.&#10;Final changes on tests." />
+    <MESSAGE value="Adaptation to the standards." />
+    <option name="LAST_COMMIT_MESSAGE" value="Adaptation to the standards." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -889,8 +893,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/testes/test_mlist_pop_tid_random.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6959153">
-          <caret line="23" column="25" selection-start-line="23" selection-start-column="25" selection-end-line="23" selection-end-column="25" />
+        <state vertical-scroll-proportion="0.90771556">
+          <caret line="30" column="18" selection-start-line="30" selection-start-column="18" selection-end-line="30" selection-end-column="18" />
           <folding>
             <element signature="e#40#58#0" expanded="true" />
           </folding>
