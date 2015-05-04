@@ -2,6 +2,11 @@
 
 echo
 echo
+echo :test_mcreate
+time ./test_mcreate.out
+
+echo
+echo
 echo :test_mlist_exist_tid
 time ./test_mlist_exist_tid.out
 
@@ -39,3 +44,13 @@ echo
 echo
 echo :test_mvector_pop_tid
 time ./test_mvector_pop_tid.out
+
+echo
+echo
+echo :test_mwait
+time ./test_mwait.out
+
+echo
+echo
+echo :test_myield
+time ./test_myield.out

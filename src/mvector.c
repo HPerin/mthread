@@ -15,7 +15,7 @@
  * wasted when you don't use
  * the whole block.
  */
-#define VECTOR_BLOCK_SIZE 1000
+#define VECTOR_BLOCK_SIZE 1024
 #define VECTOR_GROW_RATE 2
 
 void mvector_zero_fill(MVECTOR *mvector, size_t init, size_t end) {

@@ -32,3 +32,12 @@
 
 # Debug files
 *.dSYM/
+
+# Documents
+Duvidas.odt
+
+# Latex auxiliar files
+*.aux
+*.log
+*.gz
+*.toc
