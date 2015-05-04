@@ -36,5 +36,8 @@ test_mwait:	test_mwait.c
 test_myield:	test_myield.c
 	$(CC) -o test_myield.out test_myield.c -L$(LIBDIR) -lmthread -Wall
 
+run:	all
+	./run.sh
+
 clean:
 	rm *.out

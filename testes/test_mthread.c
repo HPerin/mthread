@@ -7,7 +7,8 @@
 #include "../include/mthread.h"
 
 void test_mthread_1(void *arg) {
-    int i = (int) arg;
+    int *i_p = (int*) arg;
+    int i = *i_p;
 
     //printf("ID = %d, before\n", i);
     if (i % 2 == 0) myield();
@@ -20,7 +21,7 @@ void test_mthread() {
     int i;
 
     for ( i = 0; i < THREADS; i++ ) {
-        tid[i] = mcreate(PRIORITY_HIGH, test_mthread_1, (void*) i);
+        tid[i] = mcreate(PRIORITY_HIGH, test_mthread_1, (void*) &i);
     }
 
     myield();

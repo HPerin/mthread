@@ -20,7 +20,7 @@
  *
  * @ret: created thread tid if successful, -1 if failed.
  */
-extern int (*mcreate)(int prio, void (*start)(void*), void *arg);
+int mcreate(int prio, void (*start)(void*), void *arg);
 
 /*
  * This gives away the execution privilege
@@ -52,7 +52,7 @@ int mwait(int tid);
  *
  * @ret: 0 if successful, -1 if failed.
  */
-extern int (*mmutex_init)(mmutex_t *mtx);
+int mmutex_init(mmutex_t *mtx);
 
 /*
  * Locks the current thread in the specified

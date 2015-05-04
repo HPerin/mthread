@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <time.h>
 #include "../include/mlist.h"
 
 void test_mlist_pop_tid_random() {
