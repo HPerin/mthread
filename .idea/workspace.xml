@@ -12,8 +12,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="92758254-db6f-4883-8d9b-e17b1d0b3758" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/relatorio/relatorio.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/relatorio/relatorio.tex" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="mthread.iws" />
@@ -75,11 +73,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_mlist_pop_tid_random.c" pinned="false" current-in-tab="true">
+      <file leaf-file-name="test_mlist_pop_tid_random.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/testes/test_mlist_pop_tid_random.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.90771556">
-              <caret line="30" column="18" selection-start-line="30" selection-start-column="18" selection-end-line="30" selection-end-column="18" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="21" column="36" selection-start-line="21" selection-start-column="36" selection-end-line="21" selection-end-column="36" />
               <folding>
                 <element signature="e#40#58#0" expanded="true" />
               </folding>
@@ -107,11 +105,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="makefile" pinned="false" current-in-tab="false">
+      <file leaf-file-name="makefile" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/testes/makefile">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.27382752">
+              <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -192,10 +190,10 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/mvector.c" />
         <option value="$PROJECT_DIR$/include/mthread.h" />
-        <option value="$PROJECT_DIR$/testes/makefile" />
         <option value="$PROJECT_DIR$/src/mthread.c" />
         <option value="$PROJECT_DIR$/testes/test_mthread.c" />
         <option value="$PROJECT_DIR$/testes/test_mlist_pop_tid_random.c" />
+        <option value="$PROJECT_DIR$/testes/makefile" />
       </list>
     </option>
   </component>
@@ -441,7 +439,19 @@
       <option name="project" value="LOCAL" />
       <updated>1430759991509</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Creation of the report.">
+      <created>1430760075763</created>
+      <option name="number" value="00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1430760075763</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Makefile fix.">
+      <created>1430760303178</created>
+      <option name="number" value="00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1430760303178</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -496,7 +506,9 @@
     <MESSAGE value="Added vector struct in ready lists, to improve the existence check performance a lot." />
     <MESSAGE value="Creation of the report.&#10;Final changes on tests." />
     <MESSAGE value="Adaptation to the standards." />
-    <option name="LAST_COMMIT_MESSAGE" value="Adaptation to the standards." />
+    <MESSAGE value="Creation of the report." />
+    <MESSAGE value="Makefile fix." />
+    <option name="LAST_COMMIT_MESSAGE" value="Makefile fix." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -849,14 +861,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testes/makefile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/testes/test_mcreate.c">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -893,11 +897,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/testes/test_mlist_pop_tid_random.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.90771556">
-          <caret line="30" column="18" selection-start-line="30" selection-start-column="18" selection-end-line="30" selection-end-column="18" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="21" column="36" selection-start-line="21" selection-start-column="36" selection-end-line="21" selection-end-column="36" />
           <folding>
             <element signature="e#40#58#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testes/makefile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.27382752">
+          <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
